@@ -14,7 +14,7 @@ Education
 * B.S. in Economics, Rutgers University, 2014
 * B.S. in Public Health, Rutgers University, 2014
 * M.S. in Applied Statistics, Teachers College at Columbia University, 2016
-* Ed.M. in Measurement and Evaluation, Teachers College at Columbia University, 2016
+* Ed.M. in Measurement & Evaluation, Teachers College at Columbia University, 2016
 * Ph.D in Research Methodology, Measurement, & Evaluation, University of Connecticut, 2020 (expected)
   
 Skills
