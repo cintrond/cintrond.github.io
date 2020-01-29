@@ -6,7 +6,6 @@ excerpt: ''
 date: 2019-02-28
 venue: 'School Psychology Quarterly'
 paperurl: 'http://academicpages.github.io/files/paper3.pdf'
-citation: ''
 ---
 This paper is about evaluating the factorial invariance of the Usage Rating Profile for Supporting Students' Behavioral Needs.
 
