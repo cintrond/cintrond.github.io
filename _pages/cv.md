@@ -9,7 +9,7 @@ redirect_from:
 
 {% include base_path %}
 
-[Download CV](http://cintrond.github.io/files/cv.pdf)
+<span style="font-size:larger;">[View CV](http://cintrond.github.io/files/cv.pdf)</span>
 
 Education
 ======
