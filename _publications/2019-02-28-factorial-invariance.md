@@ -2,7 +2,7 @@
 title: "Factorial Invariance of the Usage Rating Profile for Supporting Students' Behavioral Needs (URP-NEEDS)"
 collection: publications
 permalink: /publication/2019-02-28-factorial-invariance
-excerpt: 'This paper is about evaluating the factorial invariance of the Usage Rating Profile for Supporting Students' Behavioral Needs.'
+excerpt: 'This paper is about the number 3. The number 4 is left for future work.'
 date: 2015-10-01
 venue: 'Journal 1'
 paperurl: 'http://academicpages.github.io/files/paper3.pdf'
