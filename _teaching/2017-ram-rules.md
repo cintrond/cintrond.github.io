@@ -5,7 +5,7 @@ type: "Teaching Talk"
 permalink: /teaching/2017-ram-rules
 venue: "University of Connecticut"
 date: 2017-05-03
-location: "Storrs, USA"
+location: "Storrs, CT"
 ---
 
 The following slides were put together in the spring of 2017 at the University of Connecticut. The slides cover basics of the Reticular Action Model (RAM).
