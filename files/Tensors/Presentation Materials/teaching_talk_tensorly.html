@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Tensor (Multiway Array) Decompositons</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="EPSY 6619: Advanced Modeling" />
+    <meta name="date" content="2019-05-08" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <strong>Tensor (Multiway Array) Decompositons</strong>
+## Dakota W. Cintron
+### EPSY 6619: Advanced Modeling
+### 05/08/19
+
+---
+
+class: inverse, center, middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="man-cuboid.jpg" alt="Man with Cuboid (Kroonenberg, 2008)" width="500px" /&gt;
+&lt;p class="caption"&gt;Man with Cuboid (Kroonenberg, 2008)&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: inverse, center, middle
+
+![](https://media.giphy.com/media/IDLb6wadEq2Tm/giphy.gif)
+
+---
+
+class: inverse, center, middle
+
+# Why should we care about Tensors?
+
+???
+
+Why should we care about tensors? Why do I care about tensors? Generally...
+- Tensors are a mathematical tool for data analysis. 
+- They generalize operations of matrices to higher dimensions 
+- Tensors possibly offer more natural representations of data (consider image changing over time)
+
+- Area of development: Overall, not well documented in the psychological measurement literature. 1 instance of the term tensor in SEM, 29 in Psychometrika, 0 in psychological methods. Similarly, for the term multiway 6 articles in SEM, we see 89 articles in psychometrika, and 1 instance in psychological methods. 
+
+---
+# Era of Big Data
+
+- Big data consists of multidimensional, multimodal datasets
+- Five "V"s of big data: Volume - scale of data, Variety - different forms of data, Veracity -
+uncertainty of data, and Velocity - analysis of streaming data
+- Tensors and Tensor Decompositions provide a way of representing and handling this complexity
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="five-v.jpg" alt="Big Data Analysis (Chichocki, 2014)" width="400px" /&gt;
+&lt;p class="caption"&gt;Big Data Analysis (Chichocki, 2014)&lt;/p&gt;
+&lt;/div&gt;
+
+???
+
+Overall, the benefits of multiway (tensor) analysis methods can be summarized as by Cichocki (2014):
+- Super compression of huge multidimensional, structured data which admits a low-rank approximation via TNs of high-order tensors by extracting factor matrices and/or core tensors of low-rank and low-order and perform all mathematical manipulations in tensor formats (especially, TT and HT formats).
+- These low-rank matrices are often unique (i.e., do not suffer from the rotational issue of factor indeterminancy)
+- A compact and very flexible approximate representation of structurally rich data by accounting for their spatio-temporal and spectral dependencies.
+- Opportunity to establish statistical links between cores, factors, components or hidden latent variables for blocks of data.
+- Possibility to operate with noisy, incomplete, missing data by using powerful low-rank tensor/matrix approximation techniques.
+- A framework to incorporate various diversities or constraints in different modes and thus naturally extend the standard (2-way) CA methods to largescale multidimensional data.
+
+- Big Data consists of multidimensional, multimodal datasets that are so huge and complex that they cannot be easily stored or processed by using standard computers.
+- Data in psychology is often multimodal and multidimensional
+  - For example, in education there is a push for response process data
+- Volume - Petabye, terabyte, gigabyte, megabyte?, etc.
+
+  
+---
+# Overview of Talk
+
+1. Background Singular Value Decomposition (SVD) and Principal Components Analysis (PCA) 
+  - Open **tensor-tutorial.rmd** workbook in R
+  - Change path to 'girlsgrowth' data &amp; install relevant pacakges (see commented code)  
+  - Click Run Document
+
+2. History and Background Tensors
+
+3. Basic Notation and Matrix Products
+
+4. Tensor Decompositions
+  - CANDECOMP/PARAFAC (CP)
+  - Tucker3
+
+5. Demonstrations using R
+  - We will return to the **tensor-tutorial.rmd** workbook
+
+.footnote[ 
+[1] Note throughtout I build on the work of Kroonenberg (2008), Kolda &amp; Bader (2009).
+]
+
+???
+We start with a discussion of PCA and SVD because these are classic techniques for matrix factorization. In particular, they all seek to approximate the full dataset or matrix as the product of low-rank factor matrices. Tensor Decompositions extend this idea to higher-order dimensions. 
+
+---
+
+class: inverse, center, middle
+
+# History and Background Tensors
+
+---
+# History
+
+- The origin of the term tensor is from applied mathematics (Hitchcock, 1927; Jordan, 1874)
+  - Also known as multiway arrays or multimode data (Kroonenberg, 2008)
+
+- Models for analyzing tensors originate in the psychometric literature (Carroll &amp; Chang, 1970; Cattell, 1944, 1966; Harshman, 1970; Tucker, 1966)
+
+- Tensor decompositions and applications primarily popularized in the field of chemometrics (Kroonenberg, 2008; Kolda &amp; Bader, 2009)
+
+- Recently, interest in tensor decompositions has been in the fields of signal processing, numerical linear algebra, computer vision, numerical analysis, graph analysis, and nueroscience (Kolda &amp; Bader, 2009)
+
+- *Applied Multiway Data Analysis* (Kroonenberg, 2008) useful book eminating from psychometric tradition
+
+- PARAFAC with basis function expansion approximations (Choi &amp; Hwang, 2018)
+
+???
+
+- Cattell 1944 wrote a paper about "parallel proportional profiles" and other principals for determing the choice of factors by rocations. The paper is often cited as origin of multiway analysis because it described this idea of parallel proportion profiles which can be thought of as simultaneous simple structure. 
+
+- Harshman (1970) demonstrated an extension of Cattell's principle of rotation to Proportional Profiles (PP) that offerd a basis for determining explanatory factors for three-way or higher order multi-mode data. Harshman noted that the parallel proportion profiles as demonstrated by Cattell were restricted to orthogonal factors. The generalized PP model was developed to give unique "correct" solutions with oblique, non-simple structure, and even non-linear factor structures.
+
+- Carroll &amp; Change (1970) developed an individual differences model for multidimensional scaling in which individuals are assumed differentially to weight the several dimensions of a common "psychological space". A corresponding method
+of analyzing similarities data is proposed, involving a generalization of
+"Eckart-Young analysis" to decompositionof three-way (or higher-way) tables.
+
+- Currently, the methods developed by Harshman and Tucker are restricted to three-way analysis and typically use time as the third mode. Choi &amp; Hwang (2018)  extend existing functional PARAFAC methods, that currently only handle functions of a one-dimensional argument (e.g., time) onl,to be able to handle three-way data whose responses are sequenced along both a two-dimensional domain (e.g., a plane with x- and y-axis coordinates) and a one-dimensional argument.
+
+
+---
+# What is a Tensor?
+
+- A tensor is a multidimensional or *N*-way array
+
+- Formally, an *N*-way or *N*th-order tensor is the tensor product of *N* vector spaces
+  - **Order** refers to the number of dimensions, ways, or modes
+  - A vector space is a collection of vectors that can be added/multiplied
+  - Each vector space contains its own coordinate system
+
+- In general,
+  - A 1st-order tensor is a **vector**
+  - A 2nd-order tensor is a **matrix**
+  - A 3rd-order or higher-order are referred to as **high-order tensors**
+  
+- For this talk, we will focus on higer-order tensors
+
+---
+# Example of a 3rd-Order Tensor
+
+- A 3rd-order Tensor `\(\Large \mathbf{\mathcal{M}} \in \mathbb{R}^{IxJxK}\)` with indices *I*, *J*, and *K*
+
+- Tensors are denoted by boldface Euler scripts
+
+&lt;img src="third-order.jpg" width="350px" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Cattell's Data Box
+
+- Cattell's data box (Cattell, 1966) is a common psychometric depiction of a 3rd-order tensor
+- P, Q, R, S, T, and O techinques are various factor analytic techniques proposed by Cattell for conducting factor analysis using different modes of the data
+&lt;img src="data-box.png" width="350px" style="display: block; margin: auto;" /&gt;
+
+---
+
+Given the three primary dimensions of variables, persons, and occasions, at least 6 different structural relationships can be utilized to address specific research questions
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="facets-box.jpg" alt="Nesselroade and Cattell (1988)" width="400px" /&gt;
+&lt;p class="caption"&gt;Nesselroade and Cattell (1988)&lt;/p&gt;
+&lt;/div&gt;
+
+???
+
+R-Technique: People by Tests (Variables) 
+  - Most common Factor Analysis approach
+
+Q-Technique: Tets (Variables) by People
+  - Cluster analysis - subgroups of people
+
+P-Technique: Occasions by Tests (Variables)
+  - Intra-individual time series analyses
+
+O-Technique: Tests(Variables) by Occassions
+  - Time-dependent (historical) clusters
+
+S-Technique: Occassions by People
+  - People clustering based on growth patterns
+
+T-Technique: People by Occasions
+  - Time-dependent clusters based on people
+
+---
+
+class: inverse, center, middle
+
+# Basic Notation and Matrix Products
+
+---
+# Notation and Preliminaries
+
+- We will cover
+  - Subtensors or Subarrays
+  - Norm of a tensor
+  - Rank-1 Tensor
+  - Tensor Multiplication
+  - Knronecker, Khartri-Rao, and Hadamard Products
+  
+- Not covered 
+  - Symmetry and Tensors
+  - Diagonal tensors (imagine a diagonal of 1's through third-order tensor)
+  - Matricization: Transforming a Tensor into a Matrix
+  
+
+---
+# Subtensors or Subarrays
+
+&lt;img src="tensor-components.jpg" width="350px" style="display: block; margin: auto;" /&gt;
+
+???
+
+A third order tensor with entries `\(x_{i,j,k} = \mathbf{\mathcal{X}}(i,j,k)\)` and it's subtensors. Slices and fibers. All fibers are treated as column vectors.
+
+Fibers are higher-order analogue of matrix rows &amp; columns. A fiber is defined by fixing every index but one. A matrix column is a mode-1 fiber ($x:jk$), a matrix row a mode-2 fiber ($xi:k$), and a "tube" is referred to as a mode-3 fiber ($xij:$).
+
+Slices are two-dimensional sections of a tensor, defined by fixing all but two indices. Horizontal, Lateral, and Frontal slices are denoted by `\(Xi::\)`, `\(X:j:\)`, and `\(X::k\)`. 
+
+---
+# Norm &amp; Inner Product
+
+- The norm of a tensor `\(\Large \mathbf{\mathcal{X}} \in \mathbb{R}^{I_{1} \times I_{2} \times...\times I_{N}}\)` is the square root of the sum of the squares of all the tensors elements. 
+
+
+`$$\Large ||\mathbf{\mathcal{X}}|| = \sqrt{\sum^{I_{1}}_{i_{1}=1}\sum^{I_{2}}_{i_{2}=1}...\sum^{I_{N}}_{i_{N}=1}x^2_{i_{1}i_{2},...,i_{N}}}$$`
+
+- The inner product of two tensors with the same dimensions `\(\Large \mathbf{\mathcal{X,Y}} \in \mathbb{R}^{I_{1} \times I_{2} \times ...\times I_{N}}\)` is the sum of the product of their entries 
+
+`$$\Large \langle \mathbf{\mathcal{X,Y}} \rangle = \sum^{I_{1}}_{i_{1}=1}\sum^{I_{2}}_{i_{2}=1}...\sum^{I_{N}}_{i_{N}=1}x_{i_{1}i_{2},...,i_{N}}y_{i_{1}i_{2},...,i_{N}}$$`
+- Consequently, 
+
+`$$\Large \langle \mathbf{\mathcal{X,X}} \rangle =||\mathbf{\mathcal{X}}||^2$$`
+---
+# Rank-1 Tensor
+
+- An *N*-way tensor  `\(\Large \mathbf{\mathcal{X}} \in \mathbb{R}^{I_{1}xI_{2}x...xI_{N}}\)` is considered a rank-1 tensor if it can be writter as the outer product of *N* vectors
+
+`$$\Large \mathbf{\mathcal{X}} = \bf{a}^{(1)} \circ \bf{a}^{(2)} \circ ... \circ \bf{a}^{(N)}$$`
+
+- Here, `\(\Large \circ\)` is represents the vector outer product. This means that each element of the tesnor is a the product of the corresponding vector elemnts
+
+`$$\Large x_{i_{1}i_{2}...i_{N}} = a^{(1)}_{i1}a^{(2)}_{i2} ... a^{(N)}_{iN}$$` for all `\(\Large 1 \leq i_{n} \leq I_{N}\)`
+
+- Below is an example third-order rank-one tensor `\(\Large \mathbf{\mathcal{X}} = \bf{a} \circ \bf{b}\circ \bf{c}\)`
+
+&lt;img src="rank-one.jpg" width="250px" style="display: block; margin: auto;" /&gt;
+---
+# Tensor Multiplication
+
+- Tensors can be multiplied together
+
+- Notation and symbology more complex than that of matrix multiplication (cf. Kolda, 2006)
+
+- A basic tensor multiplication procedure is referred to as the ***n*-Mode product**
+
+- The n-mode product is the product of a tensor `\(\Large \mathbf{\mathcal{X}} \in \mathbb{R}^{I_{1} \times I_{2} \times...\times I_{N}}\)` with a matrix `\(\Large \mathbf{{U}} \in \mathbb{R}^{J \times I_{n}}\)` is denoted by `\(\Large \mathbf{\mathcal{X}}  \times_{n} \mathbf{{U}}\)` and is of size `\(I_{1} \times ... \times I_{n-1} \times J \times I_{n+1} \times ... \times I_{N}\)`
+
+`$$\Large (\mathbf{\mathcal{X}}  \times_{n} \mathbf{{U}})_{i_{1} \times ... \times i_{n-1} \times j \times i_{n+1} \times ... \times i_{N}} = \sum^{I_{n}}_{i_{n}=1}x_{i_{1}i_{2}...i_{n}u_{{ji}_{n}}}$$`
+- Each mode-*n* fiber is multiplied by the matrix `\(\Large \mathbf{{U}}\)`
+
+---
+# Example *n*-Mode product
+
+- Let's consider a tensor of size `\(\Large \mathbf{\mathcal{X}} \in  \mathbb{R}^{3 \times 4 \times 2}\)`
+ with frontal slices 
+ 
+ `$$\Large X_{1} = \begin{bmatrix} 1 &amp; 4 &amp; 7 &amp; 10 \\ 2 &amp; 5 &amp; 8 &amp; 11 \\ 3 &amp; 6 &amp; 9 &amp; 12 \end{bmatrix} \quad \Large X_{2} = \begin{bmatrix} 13 &amp; 16 &amp; 19 &amp; 22 \\ 14 &amp; 17 &amp; 20 &amp; 23 \\ 15 &amp; 18 &amp; 21 &amp; 24 \end{bmatrix}$$`
+
+- Let 
+`$$\Large \mathbf{U} = \begin{bmatrix} 1 &amp; 3 &amp; 5 \\ 2 &amp; 4 &amp; 6 \end{bmatrix}$$`
+- Then the product `\(\Large \mathbf{\mathcal{Y}} = \mathbf{\mathcal{X}}  \times_{1} \mathbf{{U}} \in \mathbb{R}^{2 \times 4 \times 2}\)` is
+ `$$\Large Y_{1} = \begin{bmatrix} 22 &amp; 49 &amp; 76 &amp; 103 \\ 28 &amp; 64 &amp; 100 &amp; 136 \end{bmatrix} \quad \Large Y_{2} = \begin{bmatrix} 130 &amp; 157 &amp; 184 &amp; 211 \\ 172 &amp; 208 &amp; 244 &amp; 280 \end{bmatrix}$$`
+
+???
+
+We obtain this result by multiplying U by X1 and X2 using dot products
+  - `\(\Large 1x1 + 3x2 + 5x3 = 22\)` 
+  - `\(\Large 2x1 + 4x2 + 6x3 = 28\)`
+  - `\(\Large 1x13 + 3x14 + 5x15 = 130\)`
+  - `\(\Large 2x13 + 4x14 + 6x15 = 172\)`
+
+---
+# Knronecker Product
+
+- The *Kronecker product* of matrices `\(\Large \mathbf{A} \in \mathbb{R}^{I \times J}\)` and `\(\Large \mathbf{B} \in \mathbb{R}^{K \times L}\)` is denoted by `\(\Large \mathbf{A} \otimes \mathbf{B}\)`. The result is a matrix of size `\(\Large (IK) \times (JL)\)` and defined by
+
+`$$\Large \mathbf{A} \otimes \mathbf{B} = \begin{bmatrix} a_{11}\mathbf{B} &amp; a_{12}\mathbf{B} &amp; \dots &amp; a_{1J}\mathbf{B} \\ a_{21}\mathbf{B} &amp; a_{22}\mathbf{B} &amp; ... &amp; a_{2J}\mathbf{B} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ a_{I1}\mathbf{B} &amp; a_{I2}\mathbf{B} &amp; \dots &amp; a_{IJ}\mathbf{B} \end{bmatrix}$$`
+ 
+`$$\Large = \begin{bmatrix}  \mathbf{a_{1}} \otimes \mathbf{b_{1}} &amp; \mathbf{a_{1}} \otimes \mathbf{b_{2}} &amp; \mathbf{a_{1}} \otimes \mathbf{b_{3}} \dots \mathbf{a_{J}} \otimes \mathbf{b_{L-1}} &amp; \mathbf{a_{J}} \otimes \mathbf{b_{L}} \end{bmatrix}$$`
+
+---
+# Example Knronecker Product
+
+`$$\Large \textbf{A} = \begin{bmatrix} 2 &amp; 1  \\ 3 &amp; 4  \end{bmatrix} \quad \Large \textbf{B} = \begin{bmatrix} \frac{1}{2} &amp; 1  \\ 2 &amp; 0  \end{bmatrix}$$`
+
+`$$\Large \mathbf{A} \otimes \mathbf{B} = \begin{bmatrix}  2\textbf{B} &amp; 1\textbf{B} \\ 3\textbf{B} &amp; 4\textbf{B} \end{bmatrix} = \begin{bmatrix} 1 &amp; 2 &amp; \frac{1}{2} &amp; 1 \\ 4 &amp; 0 &amp; 2 &amp; 0 \\ \frac{3}{2} &amp; 3 &amp; 2 &amp; 4 \\ 6 &amp; 0 &amp; 8 &amp; 0 \end{bmatrix}$$`
+
+`$$\Large \mathbf{B} \otimes \mathbf{A} = \begin{bmatrix}  2\textbf{A} &amp; 1\textbf{A} \\ 3\textbf{A} &amp; 4\textbf{A} \end{bmatrix} = \begin{bmatrix} 1 &amp; \frac{1}{2} &amp; 2 &amp; 1 \\ \frac{3}{2} &amp; 2 &amp; 3 &amp; 4 \\ 4 &amp; 2 &amp; 0 &amp; 0 \\ 6 &amp; 8 &amp; 0 &amp; 0 \end{bmatrix}$$`
+
+---
+# Khatri-Rao Product
+
+- The **Khatri-Rao product** is the "matching columnwise" Kronecker product. Given matrices `\(\Large \mathbf{A} \in \mathbb{R}^{I \times J}\)` and `\(\Large \mathbf{B} \in \mathbb{R}^{K \times L}\)`, the Khatri-Rao product is denoted by `\(\Large \mathbf{A} \odot \mathbf{B}\)`. The result is a matrix of size `\(\Large (IJ) \times K\)` and defined by
+
+`$$\Large \mathbf{A} \odot \mathbf{B} = \begin{bmatrix}  \mathbf{a_{1}} \otimes \mathbf{b_{1}} &amp; \mathbf{a_{2}} \otimes \mathbf{b_{2}} &amp; \dots &amp; \mathbf{a_{K}} \otimes \mathbf{b_{K}} \end{bmatrix}$$`
+
+- If **a** and **b** are vectors then the Khatri-Rao and Kronecker products are identical, i.e., `\(\Large \mathbf{a} \otimes \mathbf{b} = \mathbf{a} \odot \mathbf{b}\)`
+
+---
+# Example Khatri-Rao Product
+
+`$$\Large \textbf{A} = \begin{bmatrix} 2 &amp; 1 &amp; 3  \\ 3 &amp; 4 &amp; 5  \end{bmatrix} \quad \Large \textbf{B} = \begin{bmatrix} \frac{1}{2} &amp; 1 &amp; 4  \\ 2 &amp; 0 &amp; 7  \end{bmatrix}$$`
+`$$\Large \mathbf{A} \odot \mathbf{B} = \begin{bmatrix}  a_{11}b_{11} &amp; a_{12}b_{12} &amp; a_{13}b_{13} \\ a_{11}b_{21} &amp; a_{12}b_{22} &amp; a_{13}b_{23} \\ a_{21}b_{11} &amp; a_{22}b_{12} &amp; a_{23}b_{13} \\ a_{21}b_{21} &amp; a_{22}b_{22} &amp; a_{23}b_{23} \end{bmatrix} = \begin{bmatrix} 1 &amp; 1 &amp; 12 \\ 4 &amp; 0 &amp; 21 \\ \frac{3}{2} &amp; 4 &amp; 20 \\  6 &amp; 0 &amp; 35 \end{bmatrix}$$`
+
+---
+# Hadamard Product
+
+- The *Hadamard product* is the elementwise matrix products. Given matrices `\(\Large \mathbf{A}\)` and `\(\Large \mathbf{B}\)`, both of size `\(\Large I \times J\)`, their Hadamard product is denoted by `\(\Large \mathbf{A} * \mathbf{B}\)`. The result is of size `\(\Large I \times J\)` and defined by 
+
+`$$\Large \mathbf{A} * \mathbf{B} = \begin{bmatrix} a_{11}b_{11} &amp; a_{12}b_{12} &amp; \dots &amp; a_{1J}b_{1J} \\ a_{21}b_{21} &amp; a_{22}b_{22} &amp; ... &amp; a_{2J}b_{2J} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ a_{I1}b_{I1} &amp; a_{I2}b_{I2} &amp; \dots &amp; a_{IJ}b_{IJ} \end{bmatrix}$$`
+---
+# Example Hadamard Product
+
+- The upper and lower diagonals need not be equal but the size of the matrices do
+
+`$$\Large \textbf{A} = \begin{bmatrix} 8 &amp; 4 &amp; 2  \\ 4 &amp; 0 &amp; 8 \\ 2 &amp; 8 &amp; 6  \end{bmatrix} \quad \Large \textbf{B} = \begin{bmatrix} 8 &amp; 4 &amp; 2  \\ 4 &amp; 0 &amp; 8 \\ 2 &amp; 8 &amp; 6 \end{bmatrix}$$`
+
+`$$\Large \mathbf{A} * \mathbf{B} = \begin{bmatrix} a_{11}b_{11} &amp; a_{12}b_{12} &amp; a_{13}b_{13} \\ a_{21}b_{21} &amp; a_{22}b_{22} &amp; a_{23}b_{23} \\ a_{31}b_{31} &amp; a_{32}b_{32} &amp; a_{33}b_{33} \end{bmatrix} = \begin{bmatrix} 64 &amp; 16 &amp; 4  \\ 16 &amp; 0 &amp; 64 \\ 4 &amp; 64 &amp; 36  \end{bmatrix}$$`
+
+---
+# Matrix Properties
+
+- The Knronecker, Khartri-Rao, and Hadamard have the following properties
+
+`$$\Large \begin{aligned} (\mathbf{A} \otimes \mathbf{B})(\mathbf{C} \otimes \mathbf{D}) &amp;= \mathbf{A}\mathbf{C} \otimes \mathbf{B}\mathbf{D} \\ (\mathbf{A} \otimes \mathbf{B})^\dagger &amp;= \mathbf{A}^\dagger \otimes \mathbf{B}^\dagger \\ \mathbf{A} \odot \mathbf{B} \odot \mathbf{C} &amp;= (\mathbf{A} \odot \mathbf{B}) \odot \mathbf{C} = \mathbf{A} \odot (\mathbf{B \odot \mathbf{C}}) \\ (\mathbf{A} \odot \mathbf{B})^\textbf{T}(\mathbf{A}\odot\mathbf{B}) &amp;= \mathbf{A}^\textbf{T}\mathbf{A}*\mathbf{B}^\textbf{T}\mathbf{B}  \\ (\mathbf{A} \odot \mathbf{B})^\dagger &amp;= ((\mathbf{A}^\textbf{T}\mathbf{A})*(\mathbf{B}^\textbf{T}\mathbf{B}))^\dagger(\mathbf{A}\odot\mathbf{B})^\textbf{T} \end{aligned}$$`
+
+- `\(\Large \mathbf{A}^\dagger\)` denotes the Moore-Penrose pseudoinverse of `\(\Large \mathbf{A}\)`
+- See Kolda and Bader (2009) for further discussion
+
+---
+
+class: inverse, center, middle
+
+# Tensor Decompositions
+
+---
+# CANDECOMP/PARAFAC
+
+- CANDECOMP (Canonical Decomposition) was proposed by Carroll and Chang (1970)
+- PARAFAC (Parallel Factors) was proposed by Harshman (1970)
+  - CADEMCOMP/PARAFAC equaivalent and often referred to as CP
+  - Also known as the polyadic form of a tensor (Hitchcock, 1927)
+- The CP decomposition factorizes a tensor into a sum of component rank-one tensors.
+- For example, given a `\(\Large \mathbf{\mathcal{X}} \in \mathbb{R}^{I \times J \times K}\)`, we would like to write the tensor as
+
+`$$\Large \mathbf{\mathcal{X}} \approx \sum^{\textbf{R}}_{r=1} \mathbf{a}_{r} \circ \mathbf{b}_{r} \circ \mathbf{c}_{r}$$`
+- A popular estimation techinque for CP decomposition is the Alternating Least Squares (ALS) Algorithm (see appendix for algorithm)
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="cp-decomp.jpg" alt="CP Decomposition (Kolda &amp;amp; Bader, 2009)" width="450px" /&gt;
+&lt;p class="caption"&gt;CP Decomposition (Kolda &amp; Bader, 2009)&lt;/p&gt;
+&lt;/div&gt;
+
+
+???
+
+The CP decomposition factorizes a tensor into a sum of outer products of vectors. where R&gt;0 and ar, br, cr are vectors of appropriate dimensions, and where the notation dot denotes the outer product for tensors
+
+NP-Hard; Not orthogonal - factor matrices are not orthogonal and may have linearly dependent columns; Essentially unique (does not suffer from factor indeterminancy)
+
+---
+# Tucker3
+
+- The Tucker Decomposition (TD) was developed by Leyard Tucker (1996)
+- TD is a form of higher-order PCA. Also, referred to as Three-Mode Factor Analysis.
+- TD decomposes a tensor into a **core** tensor multiplied by a matrix along each mode. For example, given a `\(\Large \mathbf{\mathcal{X}} \in \mathbb{R}^{I \times J \times K}\)`, we have
+`$$\Large \mathbf{\mathcal{X}} \approx \mathbf{\mathcal{G}} \times_{1} \mathbf{A} \times_{2} \mathbf{B} \times_{3} \mathbf{C} = \sum^P_{p=1}\sum^Q_{q=1}\sum^R_{r=1}g_{pqr} \mathbf{a}_{p} \circ \mathbf{b}_{q} \circ \mathbf{c}_{r}$$`
+- `\(\Large \mathbf{A} \in \mathbb{R}^{I \times P}\)`, `\(\Large \mathbf{B} \in \mathbb{R}^{J \times Q}\)`, and `\(\Large \mathbf{C} \in \mathbb{R}^{K \times R}\)` are factor matrices (orthogonal) that are thought of as the principal components for each mode. `\(\Large \mathbf{\mathcal{G}} \in \mathbb{R}^{P \times Q \times R}\)` is referred to as the core tensor. 
+- A popular estimation techinque for CP decomposition is the Higher-Order Orthogonal Iteration Algorithm (see appendix)
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="t3-decomp.jpg" alt="Tucker Decomposition (Kolda &amp;amp; Bader, 2009)" width="300px" /&gt;
+&lt;p class="caption"&gt;Tucker Decomposition (Kolda &amp; Bader, 2009)&lt;/p&gt;
+&lt;/div&gt;
+
+???
+
+The Tucker decomposition (Tucker (1966)) decomposes a tensor into a core tensor multiplied by a matrix along each mode (i.e., transformed via a k-mode product for every k=1,2,.,N):
+The core tensor entries show the level of interaction between the different components. 
+Note that G might be much smaller than the original tensor X if we accept an approximation instead of an exact equality.
+
+Suffers from factor indeterminancy; Considered a compression of data
+
+---
+
+# Demonstrations in R
+
+- Return to the **tensor-tutorial.Rmd** workbook
+
+- We will analyze the girlsgrowth dataset that is analyzed in Kroonenberg (2008) using the **rrcov3way** package
+
+- Note at the current time, my analysis has slight differences between the results in Kroonenberg(2008) and the results here. 
+  - Kroonenberg (2008) uses software call **3WayPack**
+
+---
+# Conclusions
+
+- We learned about tensors and tensor decompositions
+
+- We worked with tensor or multiway data in R using the **rrcov3way** package
+
+- I hope this presentation and workbook provide a useful jumping off point to tensor decompositions and understanding the material in Kroonenberg (2008)
+
+- Current state-of-the-art is there is no state-of-the-art. Two possible directions forward: 
+  - Bentler, Poon, &amp; Lee (1988) hava a paper on generalized multimode latent
+variable models. Implement in EQS. Not well cited. 
+  - OpenMx allows for knronecker product matrix multiplication (cf. Verdam &amp; Oort, 2019)
+
+- Useful websites:
+  - http://www.psychology.uwo.ca/faculty/harshman/index.html#active
+  - http://three-mode.leidenuniv.nl/
+  - http://tensorlab.cms.caltech.edu/users/anima/cs165.html
+  - https://github.com/JeanKossaifi/ifi-summer-school
+  - https://www.youtube.com/watch?v=L8uT6hgMt00&amp;t=1302s
+  
+???
+
+Many challenging problems related to low-rank tensor approximations remain to be addressed.
+- A whole new area emerges when several TNs which operate on different datasets are coupled or linked. 
+- As the complexity of big data increases, this requires more efficient iterative algorithms for their computation, extending beyond the ALS, MALS/DMRG, SVD/QR and CUR/Cross-Approximation class of algorithms.
+- Methodological approaches are needed to determine the kind of constraints that should be imposed on cores to extract desired hidden (latent) variables with meaningful physical interpretation.
+- We need methods to reliably estimate the ranks of TNs, especially for structured data corrupted by noise and outliers.
+- The uniqueness of various TN models under different constraints needs to be investigated.
+- Special techniques are needed for distributed computing and to save and process huge ultra largescale tensors.
+- Better visualization tools need to be developed to address large-scale tensor network representations.
+  
+---
+# Other Decompositions
+
+- Individual differences in scaling (INDSCAL; Carroll &amp; Chang, 1970)
+
+- Parallel factors for cross products (PARAFAC2; Harshman, 1972)
+
+- CANDECOMP with linear constraints (CANDELINC; Carroll et al., 1980)
+
+- Decomposition into directional components (DEDICOM; Harshman, 1978)
+
+- PARAFAC and Tucker2 (PARATUCK2; Harshman &amp; Lundy, 1996)
+
+- Tensor Power Method (Anandkumar et al., 2014)
+
+- Longitudinal ThreeMode Model (Verdam &amp; Oort, 2019) 
+
+???
+
+Tensor Networks are another area of research (see Cichocki, 2014).
+
+---
+# Software for Tensors
+
+- MATLAB (N-way Toolbox, CuBatch, PLS_Toolbox, Tensor Toolbox)
+
+- R (rTensor, ThreeWay, PTaK, rrcov3way)
+
+- FORTRAN (Multilinear Engine)
+
+- Python (Tensorly)
+
+- C++ (HUJI Tensor Library, FTensor, Boost.MultiArray)
+
+
+---
+
+# References
+
+Anandkumar, A., Ge, R., Hsu, D., Kakade, S. M., &amp; Telgarsky, M. (2014). Tensor decompositions for learning latent variable models. The Journal of Machine Learning Research, 15(1), 2773-2832.
+
+Bentler, P. M., Poon, W. Y., &amp; Lee, S. Y. (1988). Generalized multimode latent variable models: Implementation by standard programs. Computational Statistics &amp; Data Analysis, 7(2), 107-118.
+
+Carroll, J. D., &amp; Chang, J. J. (1970). Analysis of individual differences in multidimensional scaling via an N-way generalization of "Eckart-Young" decomposition. Psychometrika, 35(3), 283-319.
+
+Carroll, J. D., Pruzansky, S., &amp; Kruskal, J. B. (1980). CANDELINC: A general approach to multidimensional analysis of many-way arrays with linear constraints on parameters. Psychometrika, 45(1), 3-24.
+
+Cartwright, D., &amp; Sturmfels, B. (2013). The number of eigenvalues of a tensor. Linear algebra and its applications, 438(2), 942-952.
+
+Cattell, R. B. (1944). "Parallel proportional profiles" and other principles for determining the choice of factors by rotation. Psychometrika, 9(4), 267-283.
+
+---
+# References
+
+Cattell, R. B. (1966). The data box: Its ordering of total resources in terms of possible relational systems. Handbook of multivariate experimental psychology, 67-128
+
+Cichocki, A. (2014). Era of big data processing: A new approach via tensor networks and tensor decompositions. arXiv preprint arXiv:1403.2048.
+
+Choi, J. Y., Hwang, H., &amp; Timmerman, M. E. (2018). Functional Parallel Factor Analysis for Functions of One-and Two-dimensional Arguments. Psychometrika, 83(1), 1-20.
+
+De Lathauwer, L., De Moor, B., &amp; Vandewalle, J. (2000). A multilinear singular value decomposition. SIAM journal on Matrix Analysis and Applications, 21(4), 1253-1278.
+
+Jordan, C. (1874). Mémoire sur les formes bilinéaires. Journal de mathématiques pures et appliquées, 19, 35-54.
+
+Harshman, R. A. (1970). Foundations of the PARAFAC procedure: Models and conditions for an" explanatory" multimodal factor analysis.
+
+Harshman, R. (1972). parafac2: Extensions of a Procedure for "Explanatory" Factor-Analysis and Multidimensional Scaling. The Journal of the Acoustical Society of America, 51(1A), 111-111.
+
+
+---
+# References
+
+Harshman, R. A. (1978). Models for analysis of asymmetrical relationships among N objects or stimuli. In First Joint Meeting of the Psychometric Society and the Society of Mathematical Psychology, Hamilton, Ontario, 1978.
+
+Harshman, R. A., &amp; Lundy, M. E. (1996). Uniqueness proof for a family of models sharing features of Tucker's three-mode factor analysis and PARAFAC/CANDECOMP. Psychometrika, 61(1), 133-154.
+
+Hitchcock, F. L. (1927). The expression of a tensor or a polyadic as a sum of products. Journal of Mathematics and Physics, 6(1-4), 164-189.
+
+Kolda, T. G. (2006). Multilinear operators for higher-order decompositions (No. SAND2006-2081). Sandia National Laboratories.
+
+Kolda, T. G., &amp; Bader, B. W. (2009). Tensor decompositions and applications. SIAM review, 51(3), 455-500.
+
+Kossaifi, J., Panagakis, Y., &amp; Pantic, M. (2016). Tensorly: Tensor learning in python. arXiv preprint arXiv:1610.09555.
+
+Kroonenberg, P. M. (2008). Applied multiway data analysis (Vol. 702). John Wiley &amp; Sons.
+
+---
+# References
+
+Li, J., Bien, J., &amp; Wells, M. T. (2018). rTensor: An R Package for Multidimensional Array (Tensor) Unfolding, Multiplication, and Decomposition. Journal of Statistical Software, 87(10), 1-31.
+
+Nesselroade, J. R., &amp; Cattell, R. B. (Eds.). (1988). Handbook of multivariate experimental psychology. Springer Science &amp; Business Media.
+
+Rabanser, S., Shchur, O., &amp; Günnemann, S. (2017). Introduction to tensor decompositions and their applications in machine learning. arXiv preprint arXiv:1711.10781.
+
+Tucker, L. R. (1966). Some mathematical notes on three-mode factor analysis. Psychometrika, 31(3), 279-311.
+
+---
+class: inverse, center, middle
+
+# dakota.cintron@uconn.edu 
+
+---
+# ALS Algorithm
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="als-cp.jpg" alt="ALS Algorithm for CP (Kolda &amp;amp; Bader, 2009)" width="700px" /&gt;
+&lt;p class="caption"&gt;ALS Algorithm for CP (Kolda &amp; Bader, 2009)&lt;/p&gt;
+&lt;/div&gt;
+
+---
+# HOOI Algorithm
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="hooi-tuck.jpg" alt="HOOI Algorithm for TD (Kolda &amp;amp; Bader, 2009)" width="700px" /&gt;
+&lt;p class="caption"&gt;HOOI Algorithm for TD (Kolda &amp; Bader, 2009)&lt;/p&gt;
+&lt;/div&gt;
+
+---
+# Explanation ALS
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="cp-decomp.jpg" alt="CP Decomposition (Kolda &amp;amp; Bader, 2009)" width="450px" /&gt;
+&lt;p class="caption"&gt;CP Decomposition (Kolda &amp; Bader, 2009)&lt;/p&gt;
+&lt;/div&gt;
+
+- Baisc idea of fitting the model using ALS
+
+`$$\Large \text{min}_{\textbf{A,B,C}}|| \mathbf{\mathcal{X}} -  \mathbf{\mathcal{M}}||^2 \text{s.t.}  \mathbf{\mathcal{M}}=[[\textbf{A,B,C}]]$$` 
+- Essentially least squares problem `\(\Large \text{min}_{\textbf{A,B,C}}\sum_{ijk}(x_{ijk} - \sum_{l})a_{il}b_{jl}c_{kl})^2\)`
+
+- Repeat until convergence
+  - Step 1: Fix **b** &amp; **c** `\(\Large \text{min}_{\color{red}{\textbf{A}}}\sum_{ijk}(x_{ijk} - \sum_{l})\color{red}{a_{il}}b_{jl}c_{kl})^2\)`
+  - Step 2: Fix **a** &amp; **c** `\(\Large \text{min}_{\color{red}{\textbf{B}}}\sum_{ijk}(x_{ijk} - \sum_{l})a_{il}\color{red}{b_{jl}}c_{kl})^2\)`
+  - Step 3: Fix **a** &amp; **b** `\(\Large \text{min}_{\color{red}{\textbf{C}}}\sum_{ijk}(x_{ijk} - \sum_{l})a_{il}b_{jl}\color{red}{c_{kl}})^2\)`
+
+???
+We are fixing the relevant a components in the sum of the outer products of the rank-1 tensors or vector outer products
+
+Note the double backet notation [[A,B,C]] the sum of the outer products
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function(time) {
+  var d2 = function(number) {
+    return ('0' + number).slice(-2); // left-pad 0 to minutes/seconds
+  },
+
+  time_format = function(total) {
+    var secs = Math.abs(total) / 1000;
+    var h = Math.floor(secs / 3600);
+    var m = Math.floor(secs % 3600 / 60);
+    var s = Math.round(secs % 60);
+    var res = d2(m) + ':' + d2(s);
+    if (h > 0) res = h + ':' + res;
+    return res;  // [hh:]mm:ss
+  },
+
+  slide_number_div = function(i) {
+    return document.getElementsByClassName('remark-slide-number').item(i);
+  },
+
+  current_page_number = function(i) {
+    return slide_number_div(i).firstChild.textContent;  // text "i / N"
+  };
+
+  var timer = document.createElement('span'); timer.id = 'slide-time-left';
+  var time_left = time, k = slideshow.getCurrentSlideIndex(),
+      last_page_number = current_page_number(k);
+
+  setInterval(function() {
+    time_left = time_left - 1000;
+    timer.innerHTML = ' ' + time_format(time_left);
+    if (time_left < 0) timer.style.color = 'red';
+  }, 1000);
+
+  slide_number_div(k).appendChild(timer);
+
+  slideshow.on('showSlide', function(slide) {
+    var i = slide.getSlideIndex(), n = current_page_number(i);
+    // reset timer when a new slide is shown and the page number is changed
+    if (last_page_number !== n) {
+      time_left = time; last_page_number = n;
+      timer.innerHTML = ' ' + time_format(time); timer.style.color = null;
+    }
+    slide_number_div(i).appendChild(timer);
+  });
+})(60000);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
