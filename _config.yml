@@ -81,7 +81,7 @@ analytics:
 # Site Author
 author:
   name             : ""
-  avatar           : "files/avatar.jpg"
+  avatar           : https://github.com/cintrond/cintrond.github.io/files/avatar.jpg
   bio              : ""
   location         : "Storrs, CT"
   employer         :
