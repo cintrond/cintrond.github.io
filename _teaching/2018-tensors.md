@@ -10,4 +10,4 @@ location: "Storrs, CT"
 
 The following slides were put together in 2018 as part of Dr. D. Betsy McCoach's Advanced Modeling course.
 
-<span style="font-size:larger;">[Tensor Decompositions](files/Tensors/Presentation Materials/teaching_talk_tensorly.html)</span>
+<span style="font-size:larger;">[Tensor Decompositions](http://cintrond.github.io/files/Tensors/Presentation Materials/teaching_talk_tensorly.html)</span>
