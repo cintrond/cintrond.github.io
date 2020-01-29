@@ -1,5 +1,5 @@
 ---
-title: "Paper Title Number 1"
+title: "Factorial Invariance of the Usage Rating Profile for Supporting Students' Behavioral Needs (URP-NEEDS)"
 collection: publications
 permalink: /publication/2015-10-01-paper-title-number-1
 excerpt: 'This paper is about the number 3. The number 4 is left for future work.'
