@@ -1,5 +1,5 @@
 ---
-title: "RWJF Annual Leadership Institute (2019)"
+title: "RWJF Annual Leadership Institute"
 collection: teaching
 type: "Workshop"
 permalink: /teaching/2019-ali-slides
