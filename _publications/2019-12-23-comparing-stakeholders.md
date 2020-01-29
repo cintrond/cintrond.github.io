@@ -1,5 +1,5 @@
 ---
-title: "Paper Title Number 3"
+title: "Comparing Stakeholders' Knowledge and Beliefs About Supporting Students' Social, Emotional, and Behavioral Health in Schools"
 collection: publications
 permalink: /publication/2019-12-23-comparing-stakeholders
 excerpt: ''
