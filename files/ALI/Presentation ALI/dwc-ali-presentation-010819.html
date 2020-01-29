@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stakeholder Participation in Evaluation: A Topic Modeling Approach for Rapid Feedback</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Annual Leadership Institute 2019: HPRS Cohort I ⛑⛏⚖⚗" />
+    <meta name="date" content="2019-01-15" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <strong>Stakeholder Participation in Evaluation: A Topic Modeling Approach for Rapid Feedback</strong>
+## Dakota W. Cintron
+### Annual Leadership Institute 2019: HPRS Cohort I ⛑⛏⚖⚗
+### 01/15/19
+
+---
+
+class: inverse, center, middle
+
+# This talk is about using machine learning to analyze qualitative feedback resulting from the engagement of stakeholders...
+
+
+---
+# CDC Framework for Program Evaluation
+
+.center[![plot](framework.gif)]
+
+---
+# Existing Methods for Engaging Stakeholders
+
+Existing Methods
+
+1. Interviews
+2. Focus/working Groups
+3. Questionnaires (e.g., Likert &amp; Open-Ended Questions)
+4. Citizens' Juries
+5. Town Meetings
+6. Conferences/Symposia/Workshop
+7. Delphi Study
+8. Concept Mapping
+
+---
+# Challenges with Exisiting Inquiry Methods
+
+Nearly impossible to gather and analyze a large volume of qualitative feedback, especially in the short-time often devoted to focusing evaluations (Patton, 2015)
+
+Concept mapping method does not directly analyze stakeholder interviews (Jackson &amp; Trochim, 2002; Kane &amp; Trochim, 2009). 
+
+Delphi method is an iterative approach (Jorm, 2015)
+
+1. Time-Consuming
+2. Costly
+3. Limited N
+4. Indirect
+
+---
+class: inverse, center, middle
+
+# How can we gather qualitative data from stakeholders rapidly and also make sense of this data in a timely, cost-efficient manner? 
+
+---
+# A Brief (Non-Technical) Introduction TM
+
+Topic Modeling is a machine learning approach for rapidly analyzing large volumes of open-ended qualitative responses. 
+Topic modeling allows investigators to explore relationships within qualitative data and enable possible abductive inferences (i.e., a simple explanations).
+
+Topic Modeling Methods
+- Latent Dirichlet Allocation
+- Latent Semantic Indexing
+- Non-Negative Matrix Factorization
+
+Implementation
+- R libraries dplyr, tidytext, corpus, tm, topicmodels, ldatuning
+- Python libraries include NLTK, Gensim, pyLDAvis
+- Clean text data
+- Choose # of topics (Arun et al., 2010, Cao et al., 2009)
+- Anaylze N-grams (e.g., unigram or bigram)
+
+---
+# TM with LDA Demonstration
+
+
+
+
+
+
+
+
+
+Data includes 1,796 tweets using the hashtag **#equity** from 1/8/19.
+
+We might say the stakeholder here is the general public. This is not necessarily program evaluation data but the data do provide for a useful demonstration of the TM approach.
+
+Made tweets lowercase, removed punctutations, removed alphanumeric, and removed special characters.
+
+TM approach is Latent Dirichlet Allocation (Blei, Ng, &amp; Jordan, 2003)
+- LDA allows for polysemy by using a geometric simplex where words and topics coexist
+  - Polysemy allows for the coexistence of many possible meanings for a word or phrase
+  - The simplex allows for correlations among topics and words
+- LDA requires the a priori choice on the number of topics
+  - 4 topics were selected based on an analysis similar to evaluating a scree plot (Arun et al., 2010, Cao et al., 2009)
+- Topicmodels package in R utilized (Hornik &amp; Grön, 2011)
+- Removed the word equity
+
+---
+class: inverse, center, middle
+
+# Equity &lt;br&gt; 1. the quality of being fair and impartial &lt;br&gt; 2. the value of the shares issued by a company
+
+---
+class: inverse, center, middle
+
+# Equity Crowdfunding: Could It Make You Rich?  **#Crowdfunding** **#equity** **#equitycrowdfunding** **@CrowdfundHype**
+
+---
+class: inverse, center, middle
+
+# "How do we boost businesses of color in North Carolina? We talked with policy analyst Will Munn with the **@ncbudgetandtax** about his recent report Powering Up Prosperity -  **#ncga** **#ncpol** **#ncgov** **#equity** **#entrepreneursofcolor** **#podcast**" **@NCPolicyWatch**
+
+---
+class: inverse, center, middle
+
+# "The infant mortality rate in Franklin County, Ohio has reached 8.2 deaths per 1,000 live births, with black babies at three times the risk of white infants". **#DigitalHealth** **#Healthcare** **#Equity** **@AburawiMD**
+
+
+---
+# Descriptive statistics on Word Usage
+
+## Words (1-gram) with Frequency of Use Greater than 50
+
+![](dwc-ali-presentation-010819_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+# Descriptive statistics on Word Usage
+
+## Bigrams (2-gram) with Frequency of Use Greater than 15
+
+![](dwc-ali-presentation-010819_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+# Topic Modeling using LDA with Unigrams
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dwc-ali-presentation-010819_files/figure-html/tweetbeta-1.png" alt="Top Unigrams for Four Topics"  /&gt;
+&lt;p class="caption"&gt;Top Unigrams for Four Topics&lt;/p&gt;
+&lt;/div&gt;
+
+---
+# Conclusions
+
+The polysemy of equity was demonstrated with topics which may have represented
+1. Equity as a definition which is defined in either an economic or social-justice sense
+2. The importance of diversity for economic equity
+3. Equity in an economic sense 
+4. Equity in a social-justice sense
+
+Stakeholder Feedback to Analyze
+- Interviews
+- Journals
+- Public comment on regulation
+- Feedback on the focus of an evaluation
+
+Extensions to Current TM Approach
+- Analysis of 2-grams
+- Different number of topics (3 or 5)
+- TM with LSA or NNMF
+- Longitudinal Topic Modeling
+
+---
+
+# References
+
+Arun, R., Suresh, V., Madhavan, C. V., &amp; Murthy, M. N. (2010, June). On finding the natural number of topics with latent dirichlet allocation: Some observations. In Pacific-Asia Conference on Knowledge Discovery and Data Mining (pp. 391-402). Springer, Berlin, Heidelberg.
+
+
+Blei, D. M., Ng, A. Y., &amp; Jordan, M. I. (2003). Latent dirichlet allocation. Journal of machine Learning research, 3(Jan), 993-1022.
+
+Cao, J., Xia, T., Li, J., Zhang, Y., &amp; Tang, S. (2009). A density-based method for adaptive LDA model selection. Neurocomputing, 72(7-9), 1775-1781.
+
+Hornik, K., &amp; Grön, B. (2011). topicmodels: An R package for fitting topic models. Journal of Statistical Software, 40(13), 1-30.
+
+---
+
+# References Continued
+
+Jackson, K. M., &amp; Trochim, W. M. (2002). Concept mapping as an alternative approach for the analysis of open-ended survey responses. Organizational Research Methods, 5(4), 307-336.
+
+Jorm, A. F. (2015). Using the Delphi expert consensus method in mental health research. Australian &amp; New Zealand Journal of Psychiatry, 49(10), 887-897.
+
+Kane, M., &amp; Trochim, W. M. (2009). Concept mapping for applied social research. The Sage handbook of applied social research methods, 435-474.
+
+Murphy, K. P. (2012). Machine Learning: A Probabilistic Perspective. Adaptive Computation and Machine Learning.
+
+Patton, M. Q. (2015). Qualitative research and methods: Integrating theory and practice. Sage Publications. London
+
+---
+class: inverse, center, middle
+
+# dakota.cintron@uconn.edu
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();
+(function(time) {
+  var d2 = function(number) {
+    return ('0' + number).slice(-2); // left-pad 0 to minutes/seconds
+  },
+
+  time_format = function(total) {
+    var secs = Math.abs(total) / 1000;
+    var h = Math.floor(secs / 3600);
+    var m = Math.floor(secs % 3600 / 60);
+    var s = Math.round(secs % 60);
+    var res = d2(m) + ':' + d2(s);
+    if (h > 0) res = h + ':' + res;
+    return res;  // [hh:]mm:ss
+  },
+
+  slide_number_div = function(i) {
+    return document.getElementsByClassName('remark-slide-number').item(i);
+  },
+
+  current_page_number = function(i) {
+    return slide_number_div(i).firstChild.textContent;  // text "i / N"
+  };
+
+  var timer = document.createElement('span'); timer.id = 'slide-time-left';
+  var time_left = time, k = slideshow.getCurrentSlideIndex(),
+      last_page_number = current_page_number(k);
+
+  setInterval(function() {
+    time_left = time_left - 1000;
+    timer.innerHTML = ' ' + time_format(time_left);
+    if (time_left < 0) timer.style.color = 'red';
+  }, 1000);
+
+  slide_number_div(k).appendChild(timer);
+
+  slideshow.on('showSlide', function(slide) {
+    var i = slide.getSlideIndex(), n = current_page_number(i);
+    // reset timer when a new slide is shown and the page number is changed
+    if (last_page_number !== n) {
+      time_left = time; last_page_number = n;
+      timer.innerHTML = ' ' + time_format(time); timer.style.color = null;
+    }
+    slide_number_div(i).appendChild(timer);
+  });
+})(60000);</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
