@@ -2,7 +2,7 @@
 title: "Presentation on MDS & Clustering"
 collection: teaching
 type: "Teaching Talk"
-permalink: /teaching/2018-01-10-mds-clustering
+permalink: /teaching/2019-ali-slides2
 venue: "Teachers College"
 date: 2016-05-03
 location: "New York, NY"
