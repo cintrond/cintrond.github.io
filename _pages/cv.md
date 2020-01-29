@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "[Download CV](http://cintrond.github.io/files/cv.pdf)"
+title: ""
 permalink: /cv/
 author_profile: true
 redirect_from:
@@ -8,6 +8,8 @@ redirect_from:
 ---
 
 {% include base_path %}
+
+[Download CV](http://cintrond.github.io/files/cv.pdf)
 
 Education
 ======
