@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "CV"
+title: "CV [Download](http://cintrond.github.io/files/cv.pdf)"
 permalink: /cv/
 author_profile: true
 redirect_from:
