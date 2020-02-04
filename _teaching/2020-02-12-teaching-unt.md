@@ -1,5 +1,5 @@
 ---
-title: "Presentation on MDS & Clustering"
+title: "Teaching Presentation UNT"
 collection: teaching
 type: "Teaching Talk"
 permalink: /teaching/2020-02-12-teaching-unt
