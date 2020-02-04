@@ -3,7 +3,7 @@ title: "Teaching Presentation UNT"
 collection: teaching
 type: "Teaching Talk"
 permalink: /teaching/2020-02-12-teaching-unt
-venue: "Teachers College"
+venue: "University of North Texas"
 date: 2020-02-12
 location: "Dallas, TX"
 ---
