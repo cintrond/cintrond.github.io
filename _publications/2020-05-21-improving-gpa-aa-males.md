@@ -1,11 +1,11 @@
 ---
-title: "Preparing African American Males for College: A Group Counseling Approach"
+title: "Improving the Retention and GPAs of Black Males at a Primarily White Institution: A Living and Learning Community Approach"
 collection: publications
-permalink: /publication/2020-03-27-preparing-aa-males
+permalink: /publication/2020-05-21-improving-gpa-aa-males
 excerpt: ''
-date: 2020-03-27
-venue: 'The Journal for Specialists in Group Work'
-paperurl: 'https://doi.org/10.1080/01933922.2020.1740846'
-citation: 'Hines, E. M., Hines, M. R., Moore III, J. L., Steen, S., Singleton, P., Cintron, D., ... & Henderson, J. (2020). Preparing African American Males for College: A Group Counseling Approach.  <i>The Journal for Specialists in Group Work</i>, 1-17.'
+date: 2020-05-21
+venue: 'Journal of African American Males in Education'
+paperurl: 'http://journalofafricanamericanmales.com/wp-content/uploads/2020/05/CIntron-et-al-2020-Improving-retention-and-GPA.pdf'
+citation: 'Cintron, D.W., Hines E.M., Singelton II P., & Golden, M.N. (2020). Improving the retention and GPAs of Black males at a primarily white institution: A living and learning community approach.  <i>Journal of African American Males in Education</i>, <i>11</i>(1), 37-57.'
 ---
-In this article, the authors discuss how to prepare African American males for college through group counseling.
+This study provides the results of a two-year follow-up evaluation on the influence of an undergraduate living and learning community (LLC) on Black male achievement at a Primarily White Institution (PWI). Two-year follow-up survival and latent growth curve analysis results provide evidence that the LLC group had higher gains in retention and grade point average than two control groups. 
